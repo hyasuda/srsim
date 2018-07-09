@@ -30,17 +30,21 @@ void PhaseSpace_plot(){
 
     ////////// GET THE TREE FILE //////////
     TFile *myfile = new TFile("/Users/YASUDA/data/muonLinac/srsim/musr_370.root","READ"); // for local directory run 370
-    // TTree *tree = new TTree("tree","tree");
-    TTree *tree = (TTree*)myfile->Get("t1") ;
-    // tree = (TTree*)myfile->Get("t1");
+    TTree *tree = new TTree("tree","tree");
+    tree = (TTree*)myfile->Get("t1") ;
     tree->SetBranchAddress("muIniMomX",&muIniMomX);
     tree->SetBranchAddress("muIniPosX",&muIniPosX);
     tree->SetBranchAddress("muIniMomY",&muIniMomY);
     tree->SetBranchAddress("muIniPosY",&muIniPosY);
     tree->SetBranchAddress("muIniMomZ",&muIniMomZ);
+    tree->SetBranchAddress("save_px", &save_px);
+    tree->SetBranchAddress("save_x",  &save_x );
+    tree->SetBranchAddress("save_py", &save_py);
+    tree->SetBranchAddress("save_y",  &save_y );
+    tree->SetBranchAddress("save_pz", &save_pz);
 
     int nEntry = tree->GetEntries();
-    nEntry = 1000; // for test
+    // nEntry = 1000; // for test
     // nEntry = 100; // for test
     // nEntry = 10; // for test
 
