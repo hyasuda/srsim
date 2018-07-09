@@ -1,0 +1,36 @@
+#include "TFile.h"
+#include "TTree.h"
+#include "TBrowser.h"
+#include "TH1.h"
+#include "TH2.h"
+#include "TRandom.h"
+#include "TClassTable.h"
+#include "TSystem.h"
+#include "TROOT.h"
+
+void ana_test(){
+
+  double muIniMomX;
+  double muIniPosX;
+  
+  TFile *myfile = new TFile("/home/had/hyasuda/srsim/run/data/musr_330.root","READ");
+  // TTree *tree = myfile->Get("t1") ;
+  TTree *tree = (TTree*)myfile->Get("t1") ;
+  tree->SetBranchAddress("muIniMomX",&muIniMomX);
+  tree->SetBranchAddress("muIniPosX",&muIniPosX);
+
+  int nEntry = tree->GetEntries();
+  nEntry = 10; // for test
+
+  // CHECK THE FILE CONTENTS 
+  cout << "muIniMomX" << "\t" << "muIniPosX" << endl;
+  for(int iEntry = 0 ; iEntry < nEntry ; iEntry++){
+    tree->GetEntry(iEntry);
+    cout << muIniMomX << "\t" << muIniPosX << endl;
+  }
+  muIniMomX = 0;
+  muIniPosX = 0;
+  
+
+
+}
