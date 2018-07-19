@@ -52,7 +52,7 @@ void ana_test(){
 
   double xp = 0;
   double yp = 0;
-  double x  = 0;
+ double x  = 0;
   double y  = 0;
   double xm = 0;
   double ym = 0;
