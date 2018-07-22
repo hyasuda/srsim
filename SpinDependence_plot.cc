@@ -117,28 +117,19 @@ void PhaseSpace_plot(TString filename = "musr_370.root"){
     double ym_tgt_sum = 0;
 
 
-    ////////// PLOT THE INITIAL BEAM PHASE SPACE AND BEAM POLARIZATION //////////
+    ////////// SPIN DEPENDENCE OF BEAM STRUCTURE //////////
 
-    TH1D * h1_polX = new TH1D("h1_polX", "h1_polX", 1, -0.0001, 0.0001);
-    TH1D * h1_polY = new TH1D("h1_polY", "h1_polY", 1, -0.0001, 0.0001);
-    TH1D * h1_polZ = new TH1D("h1_polZ", "h1_polZ", 500, -1, 1);
-    TH1D * h1_polX_tgt = new TH1D("h1_polX_tgt", "h1_polX_tgt", 500, -0.1, 0.1);
-    TH1D * h1_polY_tgt = new TH1D("h1_polY_tgt", "h1_polY_tgt", 500, -0.1, 0.1);
-    TH1D * h1_polZ_tgt = new TH1D("h1_polZ_tgt", "h1_polZ_tgt", 500, 0.99, 1.);
-    TH1D * h1_polZ_diff = new TH1D("h1_polZ_diff", "h1_polZ_diff", 500, -0.005, 0.005);
+
+    // TH1D * h1_polX = new TH1D("h1_polX", "h1_polX", 1, -0.0001, 0.0001);
+    // TH1D * h1_polY = new TH1D("h1_polY", "h1_polY", 1, -0.0001, 0.0001);
+    // TH1D * h1_polZ = new TH1D("h1_polZ", "h1_polZ", 500, -1, 1);
+    // TH1D * h1_polX_tgt = new TH1D("h1_polX_tgt", "h1_polX_tgt", 500, -0.1, 0.1);
+    // TH1D * h1_polY_tgt = new TH1D("h1_polY_tgt", "h1_polY_tgt", 500, -0.1, 0.1);
+    // TH1D * h1_polZ_tgt = new TH1D("h1_polZ_tgt", "h1_polZ_tgt", 500, 0.99, 1.);
+    // TH1D * h1_polZ_diff = new TH1D("h1_polZ_diff", "h1_polZ_diff", 500, -0.005, 0.005);
 
     // TH2D (const char *name, const char *title, Int_t nbinsx, Double_t xlow, Double_t xup, Int_t nbinsy, Double_t ylow, Double_t yup) //
-    TH2D * h2_psX = new TH2D("h2_psX", "h2_psX", 100, -3., 3., 100, -0.1, 0.1);
-    TH2D * h2_psY = new TH2D("h2_psY", "h2_psY", 100, -3., 3., 100, -0.1, 0.1);
-    TH2D * h2_xy  = new TH2D("h2_xy",  "h2_xy" , 100, -3., 3., 100, -3. , 3. );
-
-    TH2D * h2_psX_tgt = new TH2D("h2_psX_tgt", "h2_psX_tgt", 100, -100., 100., 100, -1., 1.);
-    TH2D * h2_psY_tgt = new TH2D("h2_psY_tgt", "h2_psY_tgt", 100, -100., 100., 100, -1., 1.);
-    TH2D * h2_xy_tgt  = new TH2D("h2_xy_tgt",  "h2_xy_tgt" , 100, -100., 100., 100, -50. , 50. );
-
-    // TH2D * h2_psX_tgt = new TH2D();
-    // TH2D * h2_psY_tgt = new TH2D();
-    // TH2D * h2_xy_tgt  = new TH2D();
+    TH2D * h2_posX = new TH2D();
 
 
     // if(filename == "musr_370.root"){
