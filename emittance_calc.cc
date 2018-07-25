@@ -119,6 +119,8 @@ void emittance_calc(TString filename = "musr_370.root"){
     double xp_m_tgt = 0;
     double yp_m_tgt = 0;
 
+    int nSkip = 0;
+
     for(int iEntry = 0 ; iEntry < nEntry ; iEntry++){
         tree->GetEntry(iEntry);
         x_m += muIniPosX;
@@ -172,7 +174,8 @@ void emittance_calc(TString filename = "musr_370.root"){
     double zm_tgt_sum = 0;
     // double zmzm_tgt_mean = 0 // This is not used here because of no time data.
 
-
+    int nxover = 0;
+    int nyover = 0;
 
     for(int iEntry = 0 ; iEntry < nEntry ; iEntry++){
         tree->GetEntry(iEntry);
@@ -204,31 +207,33 @@ void emittance_calc(TString filename = "musr_370.root"){
         zm_sum   += zm;
 
         xx_tgt_sum   += (x_tgt  - x_m_tgt)  * (x_tgt  - x_m_tgt );
-        xpxp_tgt_sum += (xp_tgt - x_m_tgt)  * (xp_tgt - x_m_tgt );
+        xpxp_tgt_sum += (xp_tgt - xp_m_tgt)  * (xp_tgt - xp_m_tgt );
         xxp_tgt_sum  += (x_tgt  - x_m_tgt)  * (xp_tgt - xp_m_tgt);
         yy_tgt_sum   += (y_tgt  - y_m_tgt)  * (y_tgt  - y_m_tgt );
         ypyp_tgt_sum += (yp_tgt - yp_m_tgt) * (yp_tgt - yp_m_tgt);
-        yyp_tgt_sum  += (y_tgt  - yp_m_tgt) * (yp_tgt - yp_m_tgt);
+        yyp_tgt_sum  += (y_tgt  - y_m_tgt) * (yp_tgt - yp_m_tgt);
         zm_tgt_sum   += zm_tgt;
     }
 
-    cout << "Summary of Beam Data at INITIAL " << endl;
-    cout << "Mean X^2" << "\t" << "Mean X'^2" << "\t" << "Mean Y^2" << "\t" << "Mean Y'^2" << endl;
-    cout << xx_sum     << "\t" << xpxp_sum    << "\t" << yy_sum     << "\t" << ypyp_sum    << endl;
-    cout << "Mean X*X'"<< "\t" << "Mean Y *Y'"<< endl;
-    cout << xxp_sum    << "\t" << yyp_sum     << endl;
-    cout << "Mean Pz" << endl;
-    cout << zm_sum/nEntry << endl;
     cout << "nEntry " << endl;
     cout << nEntry << endl;
 
+    cout << "Summary of Beam Data at INITIAL " << endl;
+    cout << "Mean X^2" << "\t" << "Mean X'^2" << "\t" << "Mean X*X'" << endl;
+    cout << xx_sum     << "\t" << xpxp_sum    << "\t" << xxp_sum     << endl;
+    cout << "Mean Y^2" << "\t" << "Mean Y'^2" << "\t" << "Mean Y*Y'" << endl;
+    cout << yy_sum     << "\t" << ypyp_sum    << "\t" << yyp_sum     << endl;
+    cout << "Mean Pz" << endl;
+    cout << zm_sum/nEntry << endl;
+
     cout << "Summary of Beam Data at TARGET " << endl;
-    cout << "Mean X^2" << "\t" << "Mean X'^2" << "\t" << "Mean Y^2" << "\t" << "Mean Y'^2" << endl;
-    cout << xx_tgt_sum     << "\t" << xpxp_tgt_sum    << "\t" << yy_tgt_sum     << "\t" << ypyp_tgt_sum    << endl;
-    cout << "Mean X*X'"<< "\t" << "Mean Y *Y'"<< endl;
-    cout << xxp_tgt_sum    << "\t" << yyp_tgt_sum     << endl;
+    cout << "Mean X^2" << "\t" << "Mean X'^2" << "\t" << "Mean X*X'"         << endl;
+    cout << xx_tgt_sum     << "\t" << xpxp_tgt_sum    << "\t" << xxp_tgt_sum << endl;
+    cout << "Mean Y^2" << "\t" << "Mean Y'^2" << "\t" << "Mean Y*Y'"         << endl;
+    cout << yy_tgt_sum     << "\t" << ypyp_tgt_sum    << "\t" << yyp_tgt_sum << endl;
     cout << "Mean Pz" << endl;
     cout << zm_tgt_sum/nEntry << endl;
+
 
     double ex_rms = 0; // RMS Emittance of PhaseSpace X
     double ey_rms = 0; // RMS Emittance of PhaseSpace Y
@@ -236,13 +241,11 @@ void emittance_calc(TString filename = "musr_370.root"){
     double ey_tgt_rms = 0; // RMS Emittance of PhaseSpace Y
 
 
+
     ex_rms = sqrt(xx_sum*xpxp_sum - xxp_sum*xxp_sum)/nEntry;
     ey_rms = sqrt(yy_sum*ypyp_sum - yyp_sum*yyp_sum)/nEntry;
-    // ex_rms = sqrt(xx_sum*xpxp_sum/(nEntry*nEntry) - xxp_sum*xxp_sum/(nEntry*nEntry));
-    // ey_rms = sqrt(yy_sum*ypyp_sum/(nEntry*nEntry) - yyp_sum*yyp_sum/(nEntry*nEntry));
     ex_tgt_rms = sqrt(xx_tgt_sum*xpxp_tgt_sum - xxp_tgt_sum*xxp_tgt_sum)/nEntry;
     ey_tgt_rms = sqrt(yy_tgt_sum*ypyp_tgt_sum - yyp_tgt_sum*yyp_tgt_sum)/nEntry;
-
 
     cout << "RMS Emitttance of X at INITIAL: " << ex_rms << endl;
     cout << "RMS Emitttance of Y at INITIAL: " << ey_rms << endl;
@@ -251,15 +254,10 @@ void emittance_calc(TString filename = "musr_370.root"){
 
     double beta  = 0.0796704;
     double gamma = 1.00319;
-    // cout << "Normalized RMS Emitttance of X at INITIAL: " << ex_rms*beta*gamma*3.1415*3.1415*1000 << endl;
-    // cout << "Normalized RMS Emitttance of Y at INITIAL: " << ey_rms*beta*gamma*3.1415*3.1415*1000 << endl;
-    // cout << "Normalized RMS Emitttance of X at TARGET : " << ex_tgt_rms*beta*gamma*3.1415*3.1415*1000 << endl;
-    // cout << "Normalized RMS Emitttance of Y at TARGET : " << ey_tgt_rms*beta*gamma*3.1415*3.1415*1000 << endl;
     cout << "Normalized RMS Emitttance of X at INITIAL: " << ex_rms*beta*gamma*1000 << endl;
     cout << "Normalized RMS Emitttance of Y at INITIAL: " << ey_rms*beta*gamma*1000 << endl;
     cout << "Normalized RMS Emitttance of X at TARGET : " << ex_tgt_rms*beta*gamma*1000 << endl;
     cout << "Normalized RMS Emitttance of Y at TARGET : " << ey_tgt_rms*beta*gamma*1000 << endl;
-
     cout << "Growth of Emittance of X : " << ex_tgt_rms/ex_rms << endl;
     cout << "Growth of Emittance of Y : " << ey_tgt_rms/ey_rms << endl;
     // cout << "Growth of Normalized Emittance of X : " << ex_tgt_rms*beta/ex_rms << end;

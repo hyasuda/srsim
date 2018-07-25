@@ -119,12 +119,12 @@ void PhaseSpace_plot(TString filename = "musr_370.root"){
 
     ////////// PLOT THE INITIAL BEAM PHASE SPACE AND BEAM POLARIZATION //////////
 
-    TH1D * h1_polX = new TH1D("h1_polX", "h1_polX", 1, -0.0001, 0.0001);
-    TH1D * h1_polY = new TH1D("h1_polY", "h1_polY", 1, -0.0001, 0.0001);
+    TH1D * h1_polX = new TH1D("h1_polX", "h1_polX", 1, -0.00000001, 0.00000001);
+    TH1D * h1_polY = new TH1D("h1_polY", "h1_polY", 1, -0.00000001, 0.00000001);
     TH1D * h1_polZ = new TH1D("h1_polZ", "h1_polZ", 500, -1, 1);
     TH1D * h1_polX_tgt = new TH1D("h1_polX_tgt", "h1_polX_tgt", 500, -0.1, 0.1);
-    TH1D * h1_polY_tgt = new TH1D("h1_polY_tgt", "h1_polY_tgt", 500, -0.1, 0.1);
-    TH1D * h1_polZ_tgt = new TH1D("h1_polZ_tgt", "h1_polZ_tgt", 500, 0.99, 1.);
+    TH1D * h1_polY_tgt = new TH1D("h1_polY_tgt", "h1_polY_tgt", 500, -0.5, 0.5);
+    TH1D * h1_polZ_tgt = new TH1D("h1_polZ_tgt", "h1_polZ_tgt", 500, 0.995, 1.);
     TH1D * h1_polZ_diff = new TH1D("h1_polZ_diff", "h1_polZ_diff", 500, -0.005, 0.005);
 
     // TH2D (const char *name, const char *title, Int_t nbinsx, Double_t xlow, Double_t xup, Int_t nbinsy, Double_t ylow, Double_t yup) //
@@ -132,6 +132,7 @@ void PhaseSpace_plot(TString filename = "musr_370.root"){
     TH2D * h2_psY = new TH2D("h2_psY", "h2_psY", 100, -3., 3., 100, -0.1, 0.1);
     TH2D * h2_xy  = new TH2D("h2_xy",  "h2_xy" , 100, -3., 3., 100, -3. , 3. );
 
+    // ANY TIME //
     TH2D * h2_psX_tgt = new TH2D("h2_psX_tgt", "h2_psX_tgt", 100, -100., 100., 100, -1., 1.);
     TH2D * h2_psY_tgt = new TH2D("h2_psY_tgt", "h2_psY_tgt", 100, -100., 100., 100, -1., 1.);
     TH2D * h2_xy_tgt  = new TH2D("h2_xy_tgt",  "h2_xy_tgt" , 100, -100., 100., 100, -50. , 50. );
@@ -140,39 +141,83 @@ void PhaseSpace_plot(TString filename = "musr_370.root"){
     // TH2D * h2_psY_tgt = new TH2D();
     // TH2D * h2_xy_tgt  = new TH2D();
 
+    if(!strcmp(filename, "musr_530.root")){
+        delete h2_psX_tgt;
+        delete h2_psY_tgt;
+        delete h2_xy_tgt;
+        h1_polY_tgt = new TH1D("h1_polY_tgt", "h1_polY_tgt", 500, -0.001, 0.001);
+        h2_psX_tgt = new TH2D("h2_psX_tgt", "h2_psX_tgt", 100,   -8.,   8., 100, -0.025, 0.025);
+        h2_psY_tgt = new TH2D("h2_psY_tgt", "h2_psY_tgt", 100,  -30.,  30., 100,  -0.04,  0.04);
+        h2_xy_tgt  = new TH2D(     "h2_xy",     "h2_xy" , 100,   -5.,   5., 100,    -30,    30);
 
-    // if(filename == "musr_370.root"){
-    //     // delete h2_psX_tgt;
-    //     // delete h2_psY_tgt;
-    //     // delete h2_xy_tgt;
-    //     TH2D * h2_psX_tgt = new TH2D("h2_psX_tgt", "h2_psX_tgt", 60, -60, 0., 140, -0.08, 0.06);
-    //     TH2D * h2_psY_tgt = new TH2D("h2_psY_tgt", "h2_psY_tgt", 60, -30, 30., 60, -0.03, 0.03);
-    //     TH2D * h2_xy_tgt  = new TH2D("h2_xy",  "h2_xy" , 100, -60, 10, 100, -35 , 35 );
-    // }
-    // if(filename == "musr_430.root"){
-    //     // delete h2_psX_tgt;
-    //     // delete h2_psY_tgt;
-    //     // delete h2_xy_tgt;
-    //     TH2D * h2_psX_tgt = new TH2D("h2_psX_tgt", "h2_psX_tgt", 100, -15., 55.,  100, -0.01, 0.08   );
-    //     TH2D * h2_psY_tgt = new TH2D("h2_psY_tgt", "h2_psY_tgt", 100, -150, 150., 100, -0.28, 0.28);
-    //     TH2D * h2_xy_tgt  = new TH2D("h2_xy_tgt",  "h2_xy_tgt" , 100, -15., 55,   100, -150., 150. );
-    // }
-    // if(filename == "musr_450.root"){
-    //     // delete h2_psX_tgt;
-    //     // delete h2_psY_tgt;
-    //     // delete h2_xy_tgt;
-    //     TH2D * h2_psX_tgt = new TH2D("h2_psX_tgt", "h2_psX_tgt", 100, -5., 5.,  100, -0.03, 0.03   );
-    //     TH2D * h2_psY_tgt = new TH2D("h2_psY_tgt", "h2_psY_tgt", 100, -30, 30., 100, -0.03, 0.03);
-    //     TH2D * h2_xy_tgt  = new TH2D("h2_xy_tgt",  "h2_xy_tgt" , 100, -5., 5,   100, -30., 30. );
-    // }
-    // if(filename == "musr_500.root"){
-    //     // delete h2_psX_tgt;
-    //     // delete h2_psY_tgt;
-    //     // delete h2_xy_tgt;
-    //     TH2D * h2_psX_tgt = new TH2D("h2_psX_tgt", "h2_psX_tgt", 100, -70., 0.,  100, -0.1, 0.1   );
-    //     TH2D * h2_psY_tgt = new TH2D("h2_psY_tgt", "h2_psY_tgt", 100, -30, 20., 100, -0.05, 0.05 );
-    //     TH2D * h2_xy_tgt  = new TH2D("h2_xy_tgt",  "h2_xy_tgt" , 100, -70., 0.,   100, -30., 20. );
-    // }
+    }
+
+    if(!strcmp(filename, "musr_531.root")){
+        delete h2_psX_tgt;
+        delete h2_psY_tgt;
+        delete h2_xy_tgt;
+        h1_polY_tgt = new TH1D("h1_polY_tgt", "h1_polY_tgt", 500, -0.001, 0.001);
+        h2_psX_tgt = new TH2D("h2_psX_tgt", "h2_psX_tgt", 100,   -8.,   8., 100, -0.025, 0.025);
+        h2_psY_tgt = new TH2D("h2_psY_tgt", "h2_psY_tgt", 100,   -2.,   2., 100,  -0.04,  0.04);
+        h2_xy_tgt  = new TH2D(     "h2_xy",     "h2_xy" , 100,   -5.,   5., 100,    -30,    30);
+
+    }
+
+
+
+    if(!strcmp(filename, "musr_511.root")){
+        delete h2_psX_tgt;
+        delete h2_psY_tgt;
+        delete h2_xy_tgt;
+        h1_polY_tgt = new TH1D("h1_polY_tgt", "h1_polY_tgt", 500, -0.001, 0.001);
+        h2_psX_tgt = new TH2D("h2_psX_tgt", "h2_psX_tgt", 100,  -10.,  10., 100, -0.025, 0.025);
+        h2_psY_tgt = new TH2D("h2_psY_tgt", "h2_psY_tgt", 100,  -30.,  30., 100,  -0.03,  0.03);
+        h2_xy_tgt  = new TH2D(     "h2_xy",     "h2_xy" , 100,   -5.,   5., 100,    -30,    30);
+
+    }
+
+    if(!strcmp(filename, "musr_521.root")){
+        delete h2_psX_tgt;
+        delete h2_psY_tgt;
+        delete h2_xy_tgt;
+        h2_psX_tgt = new TH2D("h2_psX_tgt", "h2_psX_tgt", 100,  -20.,  40., 100, -0.03, 0.1);
+        h2_psY_tgt = new TH2D("h2_psY_tgt", "h2_psY_tgt", 100, -100., 100., 100,  -0.3, 0.3);
+        h2_xy_tgt  = new TH2D(     "h2_xy",     "h2_xy" , 100,  -30.,  60., 100,  -100, 100);
+
+    }
+
+    if(filename == "musr_370.root"){
+        // delete h2_psX_tgt;
+        // delete h2_psY_tgt;
+        // delete h2_xy_tgt;
+        h2_psX_tgt = new TH2D("h2_psX_tgt", "h2_psX_tgt", 60, -60, 0., 140, -0.08, 0.06);
+        h2_psY_tgt = new TH2D("h2_psY_tgt", "h2_psY_tgt", 60, -30, 30., 60, -0.03, 0.03);
+        h2_xy_tgt  = new TH2D("h2_xy",  "h2_xy" , 100, -60, 10, 100, -35 , 35 );
+    }
+    if(filename == "musr_430.root"){
+        // delete h2_psX_tgt;
+        // delete h2_psY_tgt;
+        // delete h2_xy_tgt;
+        h2_psX_tgt = new TH2D("h2_psX_tgt", "h2_psX_tgt", 100, -15., 55.,  100, -0.01, 0.08   );
+        h2_psY_tgt = new TH2D("h2_psY_tgt", "h2_psY_tgt", 100, -150, 150., 100, -0.28, 0.28);
+        h2_xy_tgt  = new TH2D("h2_xy_tgt",  "h2_xy_tgt" , 100, -15., 55,   100, -150., 150. );
+    }
+    if(filename == "musr_450.root"){
+        // delete h2_psX_tgt;
+        // delete h2_psY_tgt;
+        // delete h2_xy_tgt;
+        h2_psX_tgt = new TH2D("h2_psX_tgt", "h2_psX_tgt", 100, -5., 5.,  100, -0.03, 0.03   );
+        h2_psY_tgt = new TH2D("h2_psY_tgt", "h2_psY_tgt", 100, -30, 30., 100, -0.03, 0.03);
+        h2_xy_tgt  = new TH2D("h2_xy_tgt",  "h2_xy_tgt" , 100, -5., 5,   100, -30., 30. );
+    }
+    if(filename == "musr_500.root"){
+        // delete h2_psX_tgt;
+        // delete h2_psY_tgt;
+        // delete h2_xy_tgt;
+        h2_psX_tgt = new TH2D("h2_psX_tgt", "h2_psX_tgt", 100, -70., 0.,  100, -0.1, 0.1   );
+        h2_psY_tgt = new TH2D("h2_psY_tgt", "h2_psY_tgt", 100, -30, 20., 100, -0.05, 0.05 );
+        h2_xy_tgt  = new TH2D("h2_xy_tgt",  "h2_xy_tgt" , 100, -70., 0.,   100, -30., 20. );
+    }
 
 
     // cout << "x" << "\t" << "xp" << "\t" << "y" << "\t" << "yp" << endl;  // for debug
@@ -294,11 +339,11 @@ void PhaseSpace_plot(TString filename = "musr_370.root"){
     h1_polZ_tgt->SetLineColor(1);
     h1_polZ_tgt->SetLineWidth(2);
     h1_polZ_tgt->Draw();
-    c_pol->cd(4);
-    h1_polZ_diff->Scale(1./nEntry);
-    h1_polZ_diff->SetLineColor(1);
-    h1_polZ_diff->SetLineWidth(2);
-    h1_polZ_diff->SetXTitle("Z Polarization diff. (Target - Initial)");
-    h1_polZ_diff->SetYTitle("Event/Entry");
-    h1_polZ_diff->Draw();
+    // c_pol->cd(4);
+    // h1_polZ_diff->Scale(1./nEntry);
+    // h1_polZ_diff->SetLineColor(1);
+    // h1_polZ_diff->SetLineWidth(2);
+    // h1_polZ_diff->SetXTitle("Z Polarization diff. (Target - Initial)");
+    // h1_polZ_diff->SetYTitle("Event/Entry");
+    // h1_polZ_diff->Draw();
 }
