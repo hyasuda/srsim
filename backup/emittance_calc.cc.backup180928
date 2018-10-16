@@ -32,8 +32,8 @@ double emit[2][nxyz] = {};
 const double beta  = 0.0796704;
 const double gam = 1.00319;
 
-const double xmaxcut =  5.;
-const double xmincut = -5.;
+// const double xmaxcut = 5;
+// const double xmincut = -5;
 
 
 TH2D* h2[8];
@@ -115,7 +115,6 @@ void mean(){
     for(int iEntry = 0 ; iEntry < nEntry ; iEntry++){
         tree->GetEntry(iEntry);
         for(int ival = 0 ; ival < nval ; ival++){
-            if(val[6] > 5. || val[6] < -5.) continue;
             val_mean[ival] += val[ival];
         }
     }
@@ -149,11 +148,10 @@ void emit_calc(){
     xpout_mean = xpout_mean/nEntry;
     ypout_mean = ypout_mean/nEntry;
 
-    int emitex = 0;
-
     for(int iEntry = 0 ; iEntry < nEntry ; iEntry++){
         tree->GetEntry(iEntry);
 
+        // cut();
         // calculation of initial beam //
         valemit[0][0] = (val[1] - val_mean[1]) * (val[1] - val_mean[1]); //xx
         valemit[0][1] = (val[0]/val[4] - xp_mean) * (val[0]/val[4] - xp_mean); //xpxp
@@ -167,10 +165,6 @@ void emit_calc(){
         valemit[0][6] = valemit[0][6]*valemit[0][6]; // (Delta_phi)^2
         valemit[0][7] = valemit[0][7]*valemit[0][7]; // (Delta_W)^2
 
-        if(val[6] > xmaxcut || val[6] < xmincut) {
-            emitex++;
-            continue;
-        }
         // calculation of output beam //
         valemit[1][0] = (val[6] - val_mean[6]) * (val[6] - val_mean[6]); //xx
         valemit[1][1] = (val[5]/val[9] - xpout_mean) * (val[5]/val[9] - xpout_mean); //xpxp
@@ -189,9 +183,6 @@ void emit_calc(){
             valemit_mean[1][ival] += valemit[1][ival];
         }
     }
-    nEntry = nEntry - emitex;
-    cout << "emitex = " << emitex << endl;
-    cout << "nEntry - emitex = " << nEntry << endl;
     cout << "initial" << endl;
     cout << "xx      \t xpxp      \t xxp      \t yy      \t ypyp      \t yyp      \t phiphi      \t WW      \t phiW " << endl;
     for(int ival = 0 ; ival < nvalemit ; ival++){
@@ -231,6 +222,10 @@ void emit_calc(){
     cout << emit[1][0]/emit[0][0] << "\t" << emit[1][1]/emit[0][1] << "\t" << emit[1][2]/emit[0][2] << endl;
 }
 
+// void cut(){
+//     // xcut
+//     if(val[1] > )
+// }
 
 void hist_set(){
     int    xnbin = 100;
@@ -250,7 +245,6 @@ void hist_set(){
     h2[ih] = new TH2D(Form("h2_%d", ih),Form("h2_%d", ih), xnbin, xmin, xmax, ynbin, ymin, ymax);
     ih=3; xmin = -180. ; xmax = 180. ; ymin = -0.02 ; ymax = 0.02;
     h2[ih] = new TH2D(Form("h2_%d", ih),Form("h2_%d", ih), xnbin, xmin, xmax, ynbin, ymin, ymax);
-
     // output
     // ih=4; xmin = -15. ; xmax = 15. ; ymin = -8. ; ymax = 8.;
     ih=4; xmin = -15. ; xmax = 15. ; ymin = -50. ; ymax = 50.;
@@ -262,6 +256,68 @@ void hist_set(){
     ih=7; xmin = -180. ; xmax = 180. ; ymin = -0.02 ; ymax = 0.02;
     h2[ih] = new TH2D(Form("h2_%d", ih),Form("h2_%d", ih), xnbin, xmin, xmax, ynbin, ymin, ymax);
 
+    // for(int ih = 0 ; ih < 4 ; ih++){
+    //     h2[ih] = new TH2D(Form("h2_%d", ih),Form("h2_%d", ih), xnbin, xmax, xmin, ynbin, ymin, ymax);
+    // }
+
+    // if(filename != "musr_561.root"){
+
+    //     ih=0; xmin = -3. ; xmax = 3. ; ymin = -100. ; ymax = 100.;
+    //     h2[ih] = new TH2D(Form("h2_%d", ih),Form("h2_%d", ih), xnbin, xmin, xmax, ynbin, ymin, ymax);
+    //     ih=1; xmin = -3. ; xmax = 3. ; ymin = -100. ; ymax = 100.;
+    //     h2[ih] = new TH2D(Form("h2_%d", ih),Form("h2_%d", ih), xnbin, xmin, xmax, ynbin, ymin, ymax);
+    //     ih=2; xmin = -3. ; xmax = 3. ; ymin = -3. ; ymax = 3.;
+    //     h2[ih] = new TH2D(Form("h2_%d", ih),Form("h2_%d", ih), xnbin, xmin, xmax, ynbin, ymin, ymax);
+    //     ih=3; xmin = -180. ; xmax = 180. ; ymin = -0.01 ; ymax = 0.01;
+    //     h2[ih] = new TH2D(Form("h2_%d", ih),Form("h2_%d", ih), xnbin, xmin, xmax, ynbin, ymin, ymax);
+
+    // }
+
+    // if(filename == "musr_561.root"){
+    //     // initial
+    //     ih=0; xmin = -15. ; xmax = 15. ; ymin = -8. ; ymax = 8.;
+    //     h2[ih] = new TH2D(Form("h2_%d", ih),Form("h2_%d", ih), xnbin, xmin, xmax, ynbin, ymin, ymax);
+    //     ih=1; xmin = -15. ; xmax = 15. ; ymin = -8. ; ymax = 8.;
+    //     h2[ih] = new TH2D(Form("h2_%d", ih),Form("h2_%d", ih), xnbin, xmin, xmax, ynbin, ymin, ymax);
+    //     ih=2; xmin = -15. ; xmax = 15. ; ymin = -15. ; ymax = 15.;
+    //     h2[ih] = new TH2D(Form("h2_%d", ih),Form("h2_%d", ih), xnbin, xmin, xmax, ynbin, ymin, ymax);
+    //     ih=3; xmin = -180. ; xmax = 180. ; ymin = -0.02 ; ymax = 0.02;
+    //     h2[ih] = new TH2D(Form("h2_%d", ih),Form("h2_%d", ih), xnbin, xmin, xmax, ynbin, ymin, ymax);
+    //     // output
+    //     // ih=4; xmin = -15. ; xmax = 15. ; ymin = -8. ; ymax = 8.;
+    //     ih=4; xmin = -150. ; xmax = 15. ; ymin = -8. ; ymax = 8.;
+    //     h2[ih] = new TH2D(Form("h2_%d", ih),Form("h2_%d", ih), xnbin, xmin, xmax, ynbin, ymin, ymax);
+    //     ih=5; xmin = -15. ; xmax = 15. ; ymin = -8. ; ymax = 8.;
+    //     h2[ih] = new TH2D(Form("h2_%d", ih),Form("h2_%d", ih), xnbin, xmin, xmax, ynbin, ymin, ymax);
+    //     ih=6; xmin = -15. ; xmax = 15. ; ymin = -15. ; ymax = 15.;
+    //     h2[ih] = new TH2D(Form("h2_%d", ih),Form("h2_%d", ih), xnbin, xmin, xmax, ynbin, ymin, ymax);
+    //     ih=7; xmin = -180. ; xmax = 180. ; ymin = -0.02 ; ymax = 0.02;
+    //     h2[ih] = new TH2D(Form("h2_%d", ih),Form("h2_%d", ih), xnbin, xmin, xmax, ynbin, ymin, ymax);
+    // }
+
+    // if(filename == "musr_563.root"){
+    //     // initial
+    //     ih=0; xmin = -15. ; xmax = 15. ; ymin = -8. ; ymax = 8.;
+    //     h2[ih] = new TH2D(Form("h2_%d", ih),Form("h2_%d", ih), xnbin, xmin, xmax, ynbin, ymin, ymax);
+    //     ih=1; xmin = -15. ; xmax = 15. ; ymin = -8. ; ymax = 8.;
+    //     h2[ih] = new TH2D(Form("h2_%d", ih),Form("h2_%d", ih), xnbin, xmin, xmax, ynbin, ymin, ymax);
+    //     ih=2; xmin = -15. ; xmax = 15. ; ymin = -15. ; ymax = 15.;
+    //     h2[ih] = new TH2D(Form("h2_%d", ih),Form("h2_%d", ih), xnbin, xmin, xmax, ynbin, ymin, ymax);
+    //     ih=3; xmin = -180. ; xmax = 180. ; ymin = -0.02 ; ymax = 0.02;
+    //     h2[ih] = new TH2D(Form("h2_%d", ih),Form("h2_%d", ih), xnbin, xmin, xmax, ynbin, ymin, ymax);
+    //     // output
+    //     // ih=4; xmin = -15. ; xmax = 15. ; ymin = -8. ; ymax = 8.;
+    //     ih=4; xmin = -150. ; xmax = 15. ; ymin = -8. ; ymax = 8.;
+    //     h2[ih] = new TH2D(Form("h2_%d", ih),Form("h2_%d", ih), xnbin, xmin, xmax, ynbin, ymin, ymax);
+    //     ih=5; xmin = -15. ; xmax = 15. ; ymin = -8. ; ymax = 8.;
+    //     h2[ih] = new TH2D(Form("h2_%d", ih),Form("h2_%d", ih), xnbin, xmin, xmax, ynbin, ymin, ymax);
+    //     ih=6; xmin = -15. ; xmax = 15. ; ymin = -15. ; ymax = 15.;
+    //     h2[ih] = new TH2D(Form("h2_%d", ih),Form("h2_%d", ih), xnbin, xmin, xmax, ynbin, ymin, ymax);
+    //     ih=7; xmin = -180. ; xmax = 180. ; ymin = -0.02 ; ymax = 0.02;
+    //     h2[ih] = new TH2D(Form("h2_%d", ih),Form("h2_%d", ih), xnbin, xmin, xmax, ynbin, ymin, ymax);
+    // }
+
+
     for(int iEntry = 0 ; iEntry < nEntry ; iEntry++){
         tree->GetEntry(iEntry);
 
@@ -272,7 +328,6 @@ void hist_set(){
         h2[3]->Fill(2*3.1415*RF*(val[10]-val_mean[10]), beta*(val[4] - val_mean[4]));
 
         // output
-        if(val[6] > xmaxcut || val[6] < xmincut) continue;
         h2[4]->Fill(val[6], val[5]/val[9]*1.e+03);
         h2[5]->Fill(val[8], val[7]/val[9]*1.e+03);
         h2[6]->Fill(val[6], val[8]);
@@ -281,8 +336,8 @@ void hist_set(){
 }
 
 void hist_plot(){
-    TCanvas * c1 = new TCanvas("c1","input",800,600);
-    TCanvas * c2 = new TCanvas("c2","output",800,600);
+    TCanvas * c1 = new TCanvas("c1","input",1000,800);
+    TCanvas * c2 = new TCanvas("c2","output",1000,800);
     c1->Divide(2,2);
     c2->Divide(2,2);
     h2[3]->GetXaxis()->SetRangeUser(-180.,180.);

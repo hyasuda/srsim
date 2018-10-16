@@ -8,9 +8,6 @@
 #include "TSystem.h"
 #include "TROOT.h"
 
-const double RF = 324. ; // Frequency of RF 324 MHz
-const double m_mu = 105.6 ; // Muon mass 105.6 MeV
-
 // void PhaseSpace_plot(){
 void PhaseSpace_plot(TString filename = "musr_370.root"){
 
@@ -24,10 +21,6 @@ void PhaseSpace_plot(TString filename = "musr_370.root"){
     double muIniMomY;
     double muIniPosY;
     double muIniMomZ;
-
-    double muIniTime;
-    double muTargetTime;
-    double save_ke[2];
 
     double save_px[2];
     double save_x[2];
@@ -71,8 +64,7 @@ void PhaseSpace_plot(TString filename = "musr_370.root"){
     tree->SetBranchAddress("save_ke", &save_ke);
     tree->SetBranchAddress("muTargetTime", &muTargetTime);
 
-    // int nEntry = tree->GetEntries();
-    int nEntry = 10;
+    int nEntry = tree->GetEntries();
 
     /////////// CHECK THE FILE CONTENTS //////////
     // cout << "CHECK THE FILE CONTENTS" << endl;
@@ -105,20 +97,6 @@ void PhaseSpace_plot(TString filename = "musr_370.root"){
     double y  = 0;
     double xm = 0;
     double ym = 0;
-
-    double t0 = 0;
-    double t1 = 0;
-    double phi0 = 0;
-    double phi1 = 0;
-    double ke0 = 0;
-    double ke1 = 0;
-
-    double t0_sum = 0;
-    double t1_sum = 0;
-    double phi0_sum = 0;
-    double phi1_sum = 0;
-    double ke0_sum = 0;
-    double ke1_sum = 0;
 
     double xp_tgt = 0;
     double yp_tgt = 0;
@@ -156,15 +134,11 @@ void PhaseSpace_plot(TString filename = "musr_370.root"){
     TH2D * h2_psX = new TH2D("h2_psX", "h2_psX", 100, -10., 10., 100, -0.0065, 0.0065);
     TH2D * h2_psY = new TH2D("h2_psY", "h2_psY", 100, -10., 10., 100, -0.006, 0.006);
     TH2D * h2_xy  = new TH2D("h2_xy",  "h2_xy" , 100, -10., 10., 100, -10. , 10. );
-    // TH2D * h2_psZ = new TH2D("h2_psZ", "h2_psZ", 100, -180., 180., 100, -0.010, 0.010);
-    TH2D * h2_psZ = new TH2D("h2_psZ", "h2_psZ", 100, -10., 10., 100, -0.015, 0.015);
 
     // ANY TIME //
-    TH2D * h2_psX_tgt = new TH2D("h2_psX_tgt", "h2_psX_tgt", 100, -10., 10., 100, -0.0065, 0.0065);
-    TH2D * h2_psY_tgt = new TH2D("h2_psY_tgt", "h2_psY_tgt", 100, -10., 10., 100, -0.0065, 0.0065);
-    TH2D * h2_xy_tgt  = new TH2D("h2_xy_tgt",  "h2_xy_tgt" , 100, -10., 10., 100, -10. , 10. );
-    // TH2D * h2_psZ_tgt = new TH2D("h2_psZ_tgt", "h2_psZ_tgt", 100, -180., 180., 100, -0.010, 0.010);
-    TH2D * h2_psZ_tgt = new TH2D("h2_psZ_tgt", "h2_psZ_tgt", 100, -10., 10., 100, -0.015, 0.015);
+    TH2D * h2_psX_tgt = new TH2D("h2_psX_tgt", "h2_psX_tgt", 100, -100., 100., 100, -1., 1.);
+    TH2D * h2_psY_tgt = new TH2D("h2_psY_tgt", "h2_psY_tgt", 100, -100., 100., 100, -1., 1.);
+    TH2D * h2_xy_tgt  = new TH2D("h2_xy_tgt",  "h2_xy_tgt" , 100, -100., 100., 100, -50. , 50. );
 
     // TH2D * h2_psX_tgt = new TH2D();
     // TH2D * h2_psY_tgt = new TH2D();
@@ -288,26 +262,6 @@ void PhaseSpace_plot(TString filename = "musr_370.root"){
         h2_xy_tgt  = new TH2D("h2_xy_tgt",  "h2_xy_tgt" , 100, -70., 0.,   100, -30., 20. );
     }
 
-    for(int iEntry = 0 ; iEntry < nEntry ; iEntry++){
-        tree->GetEntry(iEntry);
-        t0 = muIniTime;
-        t1 = muTargetTime;
-
-        t0_sum += t0;
-        t1_sum += t1;
-
-        // ke0 = (muIniMomZ*muIniMomZ + muIniMomX*muIniMomX + muIniMomY*muIniMomY)/(2*m_mu);
-        ke0 = muIniMomZ*muIniMomZ/(2*m_mu);
-        ke1 = save_ke[0];
-
-        ke0_sum += ke0;
-        ke1_sum += ke1;
-    }
-
-    cout << "= = = AVERAGE = = =" << endl;
-    cout << t0_sum/nEntry << "\t" << t1_sum/nEntry << endl;
-    cout << ke0_sum/nEntry << "\t" << ke1_sum/nEntry << endl;
-
 
     // cout << "x" << "\t" << "xp" << "\t" << "y" << "\t" << "yp" << endl;  // for debug
     for(int iEntry = 0 ; iEntry < nEntry ; iEntry++){
@@ -324,23 +278,6 @@ void PhaseSpace_plot(TString filename = "musr_370.root"){
         y_tgt  = save_y[0];
         xm_tgt = save_px[0];
         ym_tgt = save_py[0];
-
-        t0 = muIniTime;
-        t1 = muTargetTime;
-        // phi0 = RF*(t0-t0_sum/nEntry)/180; // phase [deg]
-        // phi1 = RF*(t1-t1_sum/nEntry)/180; // phase [deg]
-        phi0 = RF*(t0-t0_sum/nEntry); // phase [deg]
-        cout << "CHECK" << endl;
-        cout << 1/RF << " [usec]" << endl;
-        cout << t0-t0_sum/nEntry << " [usec]" << endl;
-        phi1 = RF*(t1-t1_sum/nEntry); // phase [deg]
-
-        // ke0 = (muIniMomZ*muIniMomZ + muIniMomX*muIniMomX+ muIniMomY*muIniMomY)/(2*m_mu);
-        ke0 = muIniMomZ*muIniMomZ/(2*m_mu);
-        ke1 = save_ke[0];
-
-        h2_psZ->Fill(phi0,ke0-(ke0_sum/nEntry));
-        h2_psZ_tgt->Fill(phi1,ke1-(ke1_sum/nEntry));
 
         xp_sum += xp;
         yp_sum += yp;
@@ -400,8 +337,6 @@ void PhaseSpace_plot(TString filename = "musr_370.root"){
     h2_xy->SetXTitle("x[mm]");
     h2_xy->SetYTitle("y[mm]");
     h2_xy->Draw("colz");
-    c_init->cd(4);
-    h2_psZ->Draw("colz");
 
     TCanvas *c_tgt = new TCanvas("c_tgt","Phase Space at Target",1000,800);
     c_tgt->Divide(2,2);
@@ -417,8 +352,6 @@ void PhaseSpace_plot(TString filename = "musr_370.root"){
     h2_xy_tgt->SetXTitle("x[mm]");
     h2_xy_tgt->SetYTitle("y[mm]");
     h2_xy_tgt->Draw("colz");
-    c_tgt->cd(4);
-    h2_psZ_tgt->Draw("colz");
 
     TCanvas * c_pol = new TCanvas("c_pol","Polarization of Beam", 1000, 800);
     c_pol->Divide(2,2);
